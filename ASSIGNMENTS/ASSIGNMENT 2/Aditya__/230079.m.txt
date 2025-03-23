@@ -1,0 +1,31 @@
+% MATLAB script to plot heat transfer rate vs insulation thickness
+
+% Given parameters
+r1 = 0.05;   % Initial cylinder radius (m)
+T0 = 500;    % Surface temperature of cylinder (K)
+T_inf = 300; % Ambient temperature (K)
+k = 4;    % Thermal conductivity of insulation (W/m-K)
+h = 10;      % Convective heat transfer coefficient (W/m^2-K)
+
+% Range of insulation thickness
+thickness = linspace(0.001, 4, 100); % From 1 mm to 20 cm
+r2 = r1 + thickness; % Outer radius after insulation
+
+% Compute heat transfer rate
+Q = zeros(size(thickness)); % Initialize array for heat transfer rates
+
+for i = 1:length(thickness)
+    R_cond = log(r2(i)/r1) / (2 * pi * k); % Thermal resistance due to conduction
+    R_conv = 1 / (h * 2 * pi * r2(i));     % Thermal resistance due to convection
+    
+    R_total = R_cond + R_conv; % Total thermal resistance
+    Q(i) = (T0 - T_inf) / R_total; % Rate of heat transfer
+end
+
+% Plotting results
+figure;
+plot(thickness, Q, 'b', 'LineWidth', 2);
+xlabel('Insulation Thickness (m)');
+ylabel('Heat Transfer Rate (W)');
+title('Effect of Insulation Thickness on Heat Transfer Rate');
+grid on;
